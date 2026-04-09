@@ -93,6 +93,12 @@ export default function Navbar() {
         >
           Verify Identity
         </button>
+        <button
+          onClick={() => navigateWithLoader("/slice-buy")}
+          className="font-bold uppercase tracking-widest text-[#121212] hover:text-[#D02020] transition-colors cursor-pointer border-none bg-transparent"
+        >
+          Sclice and Buy
+        </button>
 
         {/* Conditional Wallet Button / Info Badge */}
         {address && balance ? (

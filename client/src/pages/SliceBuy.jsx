@@ -3,10 +3,11 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import Button from "../components/UI/Button";
 import { ShoppingCart, User, MapPin, Tag, IndianRupee } from "lucide-react";
-
+import contract from "../contracts/LandRegistry.sol/AllLandRegistry.json";
+import { ethers } from "ethers";
 const SliceBuy = () => {
   // 1. Mock Data (Context/API se replace hoga)
-  const [marketplaceAssets] = useState([
+  const [marketplaceAssets, setmarketplaceAssets] = useState([
     {
       id: 1,
       owner: "Avinash Kr Mandal",
@@ -35,6 +36,42 @@ const SliceBuy = () => {
       image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=200",
     }
   ]);
+  useState(() => {
+    const fecthalldata = async () => {
+      const infuraProvider = new ethers.JsonRpcProvider(
+        import.meta.env.VITE_INFURA_URL
+      );
+      const Landcontratcget = new ethers.Contract(
+        import.meta.env.VITE_CONTRACT_DEPOLY_ADDRESS,
+        contract.abi,
+        infuraProvider
+      );
+
+
+      const depocontract = await Landcontratcget.filters.SaveLandRegistry();
+      const event = await Landcontratcget.queryFilter(depocontract);
+      if (event.length > 0) {
+        const parsedAssets = event.map((e) => {
+          const raw = e.args;
+          return {
+            ownerName: raw[0],
+            hashedId: raw[1],
+            plotNo: Number(raw[2]).toString(),
+            area: raw[3],
+            location: raw[4],
+            image: `https://amber-wonderful-kite-814.mypinata.cloud/ipfs/${raw[5]}`,
+            ownerWallet: raw[6],
+            registryWallet: raw[7],
+          };
+        });
+        setmarketplaceAssets(parsedAssets)
+
+      }
+    }
+
+ fecthalldata();
+  }, [])
+
 
   // 2. Buy Handler Logic
   const handleBuy = (asset) => {
@@ -63,12 +100,12 @@ const SliceBuy = () => {
               </h1>
             </div>
             <div className="max-w-xs text-right">
-               <p className="font-bold uppercase text-sm text-gray-500 leading-tight mb-2">
-                 Secure Indian Real Estate on a Decentralized Ledger.
-               </p>
-               <span className="bg-[#F0C020] px-3 py-1 border-2 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_black]">
-                 Currency: INR (₹)
-               </span>
+              <p className="font-bold uppercase text-sm text-gray-500 leading-tight mb-2">
+                Secure Indian Real Estate on a Decentralized Ledger.
+              </p>
+              <span className="bg-[#F0C020] px-3 py-1 border-2 border-black font-black text-xs uppercase shadow-[3px_3px_0px_0px_black]">
+                Currency: INR (₹)
+              </span>
             </div>
           </div>
 
@@ -84,20 +121,20 @@ const SliceBuy = () => {
                 </tr>
               </thead>
               <tbody className="divide-y-4 divide-black">
-                {marketplaceAssets.map((asset) => (
-                  <tr key={asset.id} className="hover:bg-[#F0C020]/5 transition-colors group">
+                {marketplaceAssets.map((item,i) => (
+                  <tr key={i} className="hover:bg-[#F0C020]/5 transition-colors group">
 
                     {/* Column 1: Asset Info */}
                     <td className="p-6 border-r-4 border-black">
                       <div className="flex items-center gap-5">
                         <div className="w-24 h-24 border-4 border-black shrink-0 overflow-hidden bg-gray-100 rotate-2 group-hover:rotate-0 transition-transform">
-                          <img src={asset.image} alt="land" className="w-full h-full object-cover group-hover:scale-110 transition-transform" />
+                          <img src={item.image} alt="land" className="w-full h-full object-cover group-hover:scale-110 transition-transform" />
                         </div>
                         <div>
-                          <p className="font-black text-2xl uppercase leading-none mb-2">{asset.plotNo}</p>
+                          <p className="font-black text-2xl uppercase leading-none mb-2">{item.plotNo}</p>
                           <div className="flex items-center gap-1 text-xs font-black text-[#1040C0] uppercase tracking-tighter">
                             <MapPin className="w-3 h-3" />
-                            {asset.location}
+                            {item.location}
                           </div>
                         </div>
                       </div>
@@ -110,10 +147,10 @@ const SliceBuy = () => {
                           <div className="w-8 h-8 bg-[#121212] border-2 border-white rounded-none flex items-center justify-center text-white">
                             <User className="w-4 h-4" />
                           </div>
-                          <span className="font-black uppercase text-sm tracking-tight">{asset.owner}</span>
+                          <span className="font-black uppercase text-sm tracking-tight">{item.ownerName}</span>
                         </div>
                         <div className="inline-block bg-[#F0C020]/20 border-2 border-black px-3 py-1 text-[10px] font-black uppercase">
-                          Area: {asset.area}
+                          Area: {item.area}
                         </div>
                       </div>
                     </td>
@@ -123,7 +160,7 @@ const SliceBuy = () => {
                       <div className="flex flex-col items-center">
                         <div className="flex items-center text-3xl font-black tracking-tighter">
                           <span className="text-sm mr-1">₹</span>
-                          {asset.price}
+                          $120000
                         </div>
                         <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1 italic">Incl. Registration Tax</span>
                       </div>
@@ -148,18 +185,18 @@ const SliceBuy = () => {
 
           {/* Footer Stats - Updated for INR */}
           <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-6">
-             <div className="bg-white p-6 border-4 border-black font-black uppercase flex flex-col items-center">
-                <span className="text-xs text-gray-400 mb-1">Live Listings</span>
-                <span className="text-3xl">03 Assets</span>
-             </div>
-             <div className="bg-[#F0C020] p-6 border-4 border-black font-black uppercase flex flex-col items-center">
-                <span className="text-xs text-[#121212]/50 mb-1">Total Marketplace Value</span>
-                <span className="text-3xl">₹ 1.43 Cr</span>
-             </div>
-             <div className="bg-[#D02020] text-white p-6 border-4 border-black font-black uppercase flex flex-col items-center">
-                <span className="text-xs text-white/50 mb-1">Security Protocol</span>
-                <span className="text-3xl tracking-tighter italic">L-Chain v1</span>
-             </div>
+            <div className="bg-white p-6 border-4 border-black font-black uppercase flex flex-col items-center">
+              <span className="text-xs text-gray-400 mb-1">Live Listings</span>
+              <span className="text-3xl">03 Assets</span>
+            </div>
+            <div className="bg-[#F0C020] p-6 border-4 border-black font-black uppercase flex flex-col items-center">
+              <span className="text-xs text-[#121212]/50 mb-1">Total Marketplace Value</span>
+              <span className="text-3xl">₹ 1.43 Cr</span>
+            </div>
+            <div className="bg-[#D02020] text-white p-6 border-4 border-black font-black uppercase flex flex-col items-center">
+              <span className="text-xs text-white/50 mb-1">Security Protocol</span>
+              <span className="text-3xl tracking-tighter italic">L-Chain v1</span>
+            </div>
           </div>
 
         </div>
