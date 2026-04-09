@@ -1,26 +1,47 @@
-import React from "react";
-import { Routes, Route } from "react-router-dom";
+import React, { useState, createContext, useContext } from "react";
+import { Routes, Route, useNavigate } from "react-router-dom";
 
 import LandingPage from "./pages/LandingPage.jsx";
-import AadhaarVerify from "./pages/AadhaarVerify.jsx";
 import LandVerify from "./pages/LandVerify.jsx";
 import SubmitBlockchain from "./pages/SubmitBlockchain.jsx";
-import CheckLand from "./pages/CheckLand.jsx";
+import AadhaarVerify from "./pages/AadhaarVerify.jsx";
+import Loader from "./components/Loader.jsx";
+
+// Context for Global Navigation
+const NavContext = createContext();
+export const useNav = () => useContext(NavContext);
 
 const App = () => {
-  return (
-    <>
-      <Routes>
-        {/* Main Landing Page */}
-        <Route path="/" element={<LandingPage />} />
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
-        {/* Action Pages */}
-        {/* <Route path="/verify-aadhaar" element={<AadhaarVerify />} /> */}
-        {/* <Route path="/verify-land" element={<LandVerify />} /> */}
+  // Custom Navigation function with Bauhaus transition
+  const navigateWithLoader = (path) => {
+    if (window.location.pathname === path) return; // Don't reload if already on page
+
+    setIsLoading(true);
+
+    // 1.5 seconds delay for the cool animation
+    setTimeout(() => {
+      navigate(path);
+      // Extra 200ms to ensure the new page components are ready before hiding loader
+      setTimeout(() => setIsLoading(false), 200);
+    }, 1500);
+  };
+
+  return (
+    <NavContext.Provider value={{ navigateWithLoader }}>
+      {/* Global Loader Overlay */}
+      {isLoading && <Loader />}
+
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/verify-land" element={<LandVerify />} />
+        <Route path="/verify-aadhaar" element={<AadhaarVerify />} />
         <Route path="/submit-blockchain" element={<SubmitBlockchain />} />
-        {/* <Route path="/check-land" element={<CheckLand />} /> */}
+
       </Routes>
-    </>
+    </NavContext.Provider>
   );
 };
 

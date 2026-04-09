@@ -1,38 +1,57 @@
 import React from "react";
+import { useNav } from "../App.jsx"; 
 import Button from "./UI/Button.jsx";
+import landchainLogo from "../assets/landchain.png";
 
 export default function Navbar() {
+  // Navigation function context se nikala
+  const { navigateWithLoader } = useNav();
+
   return (
     <nav className="flex justify-between items-center p-4 md:px-8 md:py-6 border-b-4 border-[#121212] bg-white sticky top-0 z-50">
-      <div className="flex items-center gap-3 cursor-pointer">
-        {/* Geometric Logo */}
-        <div className="flex -space-x-2">
-          <div className="w-8 h-8 rounded-full bg-[#D02020] border-2 border-[#121212] z-10"></div>
-          <div className="w-8 h-8 bg-[#1040C0] border-2 border-[#121212] z-20"></div>
-          <div className="w-8 h-8 bg-[#F0C020] border-2 border-[#121212] z-30 flex items-center justify-center">
-            <div className="w-0 h-0 border-l-[6px] border-r-[6px] border-b-10 border-l-transparent border-r-transparent border-b-[#121212]"></div>
+      {/* Logo Area - Custom Navigation */}
+      <div
+        className="flex items-center gap-3 cursor-pointer group"
+        onClick={() => navigateWithLoader("/")}
+      >
+        {/* Gradient Border Wrapper */}
+        <div className="p-0.75 rounded-xl bg-linear-to-tr from-[#D02020] via-[#F0C020] to-[#1040C0] transition-transform duration-300 group-hover:scale-105 shadow-[4px_4px_0px_0px_#121212]">
+          <div className="bg-[#121212] rounded-lg overflow-hidden flex items-center justify-center p-1 md:p-1.5">
+            <img
+              src={landchainLogo}
+              alt="LandChain Logo"
+              className="h-8 md:h-10 w-auto object-contain"
+            />
           </div>
         </div>
+
         <span className="text-3xl font-black tracking-tighter uppercase ml-2 font-['Outfit'] text-[#121212]">
           LandChain
         </span>
       </div>
 
-      {/* Desktop Links & Buttons */}
-      <div className="hidden md:flex gap-6 items-center">
-        <a
-          href="#about"
-          className="font-bold uppercase tracking-widest text-[#121212] hover:text-[#1040C0] transition-colors font-['Outfit']"
+      {/* Desktop Links - Replaced Link with navigateWithLoader */}
+      <div className="hidden md:flex gap-8 items-center font-['Outfit']">
+        <button
+          onClick={() => navigateWithLoader("/verify-land")}
+          className="font-bold uppercase tracking-widest text-[#121212] hover:text-[#1040C0] transition-colors cursor-pointer border-none bg-transparent"
         >
-          How it Works
-        </a>
-        <Button variant="outline">Docs</Button>
+          Verify Land
+        </button>
+
+        <button
+          onClick={() => navigateWithLoader("/submit-blockchain")}
+          className="font-bold uppercase tracking-widest text-[#121212] hover:text-[#D02020] transition-colors cursor-pointer border-none bg-transparent"
+        >
+          Mint Land
+        </button>
+
         <Button variant="primary">Connect Wallet</Button>
       </div>
 
-      {/* Mobile Menu Button (Hamburger placeholder) */}
+      {/* Mobile Menu Button */}
       <div className="md:hidden">
-        <button className="p-2 border-4 border-[#121212] bg-[#F0C020] shadow-[4px_4px_0px_0px_#121212]">
+        <button className="p-2 border-4 border-[#121212] bg-[#F0C020] shadow-[4px_4px_0px_0px_#121212] hover:bg-[#F0C020]/90 transition-colors">
           <svg
             className="w-6 h-6"
             fill="none"
@@ -44,7 +63,7 @@ export default function Navbar() {
               strokeLinejoin="round"
               strokeWidth="3"
               d="M4 6h16M4 12h16M4 18h16"
-            ></path>
+            />
           </svg>
         </button>
       </div>
