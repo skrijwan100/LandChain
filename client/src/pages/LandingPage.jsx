@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar.jsx";
 import Footer from "../components/Footer.jsx";
 import Button from "../components/UI/Button.jsx";
@@ -9,10 +10,14 @@ const FeatureCard = ({ title, description, badgeColor, shape }) => {
       {/* Decorative Geometric Corner */}
       <div className="absolute top-4 right-4 w-8 h-8 flex justify-center items-center z-10">
         {shape === "circle" && (
-          <div className={`w-full h-full rounded-full ${badgeColor} border-2 border-[#121212] group-hover:scale-110 transition-transform`}></div>
+          <div
+            className={`w-full h-full rounded-full ${badgeColor} border-2 border-[#121212] group-hover:scale-110 transition-transform`}
+          ></div>
         )}
         {shape === "square" && (
-          <div className={`w-full h-full rounded-none ${badgeColor} border-2 border-[#121212] group-hover:scale-110 transition-transform`}></div>
+          <div
+            className={`w-full h-full rounded-none ${badgeColor} border-2 border-[#121212] group-hover:scale-110 transition-transform`}
+          ></div>
         )}
         {shape === "triangle" && (
           <div
@@ -35,17 +40,15 @@ const FeatureCard = ({ title, description, badgeColor, shape }) => {
   );
 };
 
-// Main landing page component
 export default function LandingPage() {
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen bg-[#F0F0F0] text-[#121212] font-['Outfit'] overflow-x-hidden flex flex-col">
-      {/*Navbar Component */}
       <Navbar />
 
-      {/* --- HERO SECTION --- */}
       <main className="grow">
         <header className="flex flex-col lg:flex-row min-h-[85vh] border-b-4 border-[#121212]">
-
           {/* Left Typography Panel */}
           <div className="w-full lg:w-1/1 p-8 md:p-16 lg:pl-24 xl:pl-32 flex flex-col justify-center bg-[#F0F0F0] relative items-center lg:items-start">
             <div className="w-full max-w-xl">
@@ -67,32 +70,37 @@ export default function LandingPage() {
               </p>
 
               <div className="flex flex-wrap gap-4">
-                <Button variant="primary">Register Property</Button>
-                <Button variant="yellow">Verify Ownership</Button>
+                {/* Navigation Added to Buttons */}
+                <Button
+                  variant="primary"
+                  onClick={() => navigate("/submit-blockchain")}
+                >
+                  Register Property
+                </Button>
+                <Button
+                  variant="yellow"
+                  onClick={() => navigate("/verify-land")}
+                >
+                  Verify Ownership
+                </Button>
               </div>
             </div>
           </div>
 
-          {/* Right Geometric Art Panel - Refined Alignment */}
-          <div className="w-full lg:w-1/2 bg-[#1040C0] border-t-4 lg:border-t-0 lg:border-l-4 border-[#121212] relative overflow-hidden flex items-center justify-center p-12 lg:pr-24 xl:pr-32 min-h-[50vh]">
-            {/* CSS Dot Pattern */}
+          {/* Right Geometric Art Panel */}
+          <div className="w-full lg:w-[45%] bg-[#1040C0] border-t-4 lg:border-t-0 lg:border-l-4 border-[#121212] relative overflow-hidden flex items-center justify-center p-12 lg:pr-24 xl:pr-32 min-h-[50vh]">
             <div
               className="absolute inset-0 opacity-20"
               style={{
-                backgroundImage: "radial-gradient(#F0F0F0 3px, transparent 3px)",
+                backgroundImage:
+                  "radial-gradient(#F0F0F0 3px, transparent 3px)",
                 backgroundSize: "24px 24px",
               }}
             ></div>
 
-            {/* Abstract Composition */}
             <div className="relative w-full max-w-md aspect-square">
-              {/* Giant Yellow Circle */}
               <div className="absolute top-10 right-10 w-64 h-64 bg-[#F0C020] rounded-full border-4 border-[#121212] shadow-[8px_8px_0px_0px_#121212] z-10 hover:-translate-y-2 hover:shadow-[12px_12px_0px_0px_#121212] transition-all duration-300"></div>
-
-              {/* Red Rotated Square */}
               <div className="absolute bottom-10 left-10 w-48 h-48 bg-[#D02020] rotate-12 border-4 border-[#121212] shadow-[8px_8px_0px_0px_#121212] z-20 hover:rotate-6 transition-all duration-300"></div>
-
-              {/* White Center Data Block */}
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-56 h-72 bg-white border-4 border-[#121212] shadow-[12px_12px_0px_0px_#121212] z-30 flex flex-col p-4 hover:-translate-y-2 transition-transform duration-300">
                 <div className="h-1/2 w-full bg-[#121212] mb-4 flex items-center justify-center">
                   <div className="text-[#F0F0F0] font-black tracking-widest uppercase text-xl">
@@ -107,13 +115,16 @@ export default function LandingPage() {
           </div>
         </header>
 
-        {/* --- TECH STACK & FEATURES SECTION --- */}
+        {/* --- FEATURES SECTION --- */}
         <section className="bg-[#F0C020] py-24 px-8 md:px-16 lg:px-24 border-b-4 border-[#121212]">
           <div className="max-w-7xl mx-auto">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 border-b-4 border-[#121212] pb-6">
               <h2 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-none">
                 The Architecture <br /> of{" "}
-                <span className="text-white" style={{ textShadow: "4px 4px 0 #121212" }}>
+                <span
+                  className="text-white"
+                  style={{ textShadow: "4px 4px 0 #121212" }}
+                >
                   Trust
                 </span>
               </h2>
@@ -125,19 +136,19 @@ export default function LandingPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
               <FeatureCard
                 title="Solidity Smart Contracts"
-                description="Business logic is hardcoded into immutable Solidity contracts. Land minting, transferring, and fractional ownership are executed automatically without intermediaries."
+                description="Business logic is hardcoded into immutable Solidity contracts. Land minting, transferring, and fractional ownership are executed automatically."
                 badgeColor="bg-[#1040C0]"
                 shape="square"
               />
               <FeatureCard
                 title="Aadhaar Sandbox API"
-                description="Zero-knowledge KYC integration. We use the Aadhaar Sandbox API to verify owner identities securely before a wallet can be whitelisted to hold Land NFTs."
+                description="Zero-knowledge KYC integration. We use the Aadhaar Sandbox API to verify owner identities securely."
                 badgeColor="bg-[#D02020]"
                 shape="circle"
               />
               <FeatureCard
                 title="IPFS Metadata Storage"
-                description="Legal documents, plot maps, and NOCs are hashed and stored on IPFS. The blockchain only stores the CID, ensuring records are permanent and tamper-proof."
+                description="Legal documents and maps are hashed and stored on IPFS, ensuring records are permanent and tamper-proof."
                 badgeColor="bg-white"
                 shape="triangle"
               />
@@ -147,7 +158,6 @@ export default function LandingPage() {
 
         {/* --- CTA SECTION --- */}
         <section className="bg-[#D02020] py-32 px-8 border-b-4 border-[#121212] relative overflow-hidden">
-          {/* Background Decorative Elements (Fixed border syntax) */}
           <div className="absolute -right-20 -top-20 w-96 h-96 border-12 border-[#121212] rounded-full opacity-20"></div>
           <div className="absolute -left-10 -bottom-20 w-72 h-72 border-12 border-[#121212] rotate-45 opacity-20"></div>
 
@@ -156,17 +166,21 @@ export default function LandingPage() {
               Ready to Mint Your Land?
             </h2>
             <p className="text-xl md:text-2xl font-medium mb-10 text-[#121212]/80 max-w-2xl mx-auto">
-              Connect your MetaMask, verify your identity, and digitize your real
-              estate assets today.
+              Connect your MetaMask, verify your identity, and digitize your
+              real estate assets today.
             </p>
-            <Button variant="secondary" className="text-xl py-4 px-12">
+            {/* Navigation on Bottom CTA */}
+            <Button
+              variant="secondary"
+              className="text-xl py-4 px-12"
+              onClick={() => navigate("/submit-blockchain")}
+            >
               Enter App
             </Button>
           </div>
         </section>
       </main>
 
-      {/* footer */}
       <Footer />
     </div>
   );
