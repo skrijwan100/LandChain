@@ -16,9 +16,9 @@ const CheckLand = () => {
     e.preventDefault();
     if (aadhaarQuery.length !== 12)
       return alert("Enter valid 12-digit ID");
-    
+
     setIsSearching(true);
-    
+
     try {
       const infuraProvider = new ethers.JsonRpcProvider(
         import.meta.env.VITE_INFURA_URL
@@ -28,30 +28,30 @@ const CheckLand = () => {
         contract.abi,
         infuraProvider
       );
-      
+
       const hashedId = keccak256(toUtf8Bytes(aadhaarQuery));
-      
+
       const depocontract = await Landcontratcget.filters.SaveLandRegistry(null, hashedId);
       const event = await Landcontratcget.queryFilter(depocontract);
-      
+
       if (event.length > 0) {
         const parsedAssets = event.map((e) => {
           const raw = e.args;
           return {
             ownerName: raw[0],
             hashedId: raw[1],
-            plotNo: Number(raw[2]).toString(), 
+            plotNo: Number(raw[2]).toString(),
             area: raw[3],
             location: raw[4],
-            image: `https://amber-wonderful-kite-814.mypinata.cloud/ipfs/${raw[5]}`, 
+            image: `https://amber-wonderful-kite-814.mypinata.cloud/ipfs/${raw[5]}`,
             ownerWallet: raw[6],
             registryWallet: raw[7],
           };
         });
-        
+
         setAssets(parsedAssets);
       } else {
-        setAssets([]); 
+        setAssets([]);
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -68,13 +68,13 @@ const CheckLand = () => {
       const response = await fetch(imageUrl);
       const blob = await response.blob();
       const blobUrl = window.URL.createObjectURL(blob);
-      
+
       const link = document.createElement('a');
       link.href = blobUrl;
       link.download = `Deed_Plot_${plotNo}.jpg`; // Generates a clean filename
       document.body.appendChild(link);
       link.click();
-      
+
       document.body.removeChild(link);
       window.URL.revokeObjectURL(blobUrl);
     } catch (error) {
@@ -135,7 +135,11 @@ const CheckLand = () => {
                 </h2>
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+              {/* Dynamic Grid: Centers 1 record, Grids 2+ records */}
+              <div className={`grid gap-12 ${assets.length === 1
+                  ? "grid-cols-1 max-w-2xl mx-auto"
+                  : "grid-cols-1 lg:grid-cols-2"
+                }`}>
                 {assets.map((item, index) => (
                   <div
                     key={index}
@@ -163,7 +167,6 @@ const CheckLand = () => {
                         <div className="absolute inset-0 border-4 border-black pointer-events-none"></div>
                       </div>
 
-                      {/* FLOATING DOWNLOAD BUTTON */}
                       <button
                         onClick={() => handleDownloadImage(item.image, item.plotNo)}
                         disabled={isDownloading}
@@ -171,16 +174,15 @@ const CheckLand = () => {
                         title="Download Property Image"
                       >
                         {isDownloading ? (
-                           <div className="w-6 h-6 border-4 border-black border-t-transparent rounded-full animate-spin"></div>
+                          <div className="w-6 h-6 border-4 border-black border-t-transparent rounded-full animate-spin"></div>
                         ) : (
-                           <Download className="w-6 h-6 group-hover:-translate-y-1 transition-transform" />
+                          <Download className="w-6 h-6 group-hover:-translate-y-1 transition-transform" />
                         )}
                       </button>
                     </div>
 
                     {/* DEED DATA */}
                     <div className="p-6 flex flex-col gap-6 grow">
-                      {/* Owner Info */}
                       <div className="bg-white border-4 border-black p-4 shadow-[4px_4px_0px_0px_black]">
                         <p className="text-xs font-black uppercase tracking-widest text-[#D02020] mb-1">
                           Registered Owner
@@ -190,7 +192,6 @@ const CheckLand = () => {
                         </p>
                       </div>
 
-                      {/* Property Details Grid */}
                       <div className="grid grid-cols-2 border-4 border-black divide-x-4 divide-black bg-white">
                         <div className="p-4 flex flex-col justify-center border-b-4 border-black col-span-2 md:col-span-1 md:border-b-0">
                           <p className="text-[10px] font-black uppercase text-gray-500 mb-1">Plot / Survey No.</p>
@@ -209,7 +210,6 @@ const CheckLand = () => {
                         </div>
                       </div>
 
-                      {/* Blockchain Wallets */}
                       <div className="space-y-3 bg-gray-100 border-4 border-black p-4 shadow-[4px_4px_0px_0px_black]">
                         <div>
                           <p className="text-[10px] font-black uppercase text-gray-500 mb-1">Owner Wallet Address</p>
@@ -226,7 +226,6 @@ const CheckLand = () => {
                       </div>
                     </div>
 
-                    {/* SEAL / FOOTER */}
                     <button className="w-full py-5 bg-[#121212] text-white font-black uppercase tracking-[0.2em] text-sm hover:bg-[#D02020] transition-colors border-t-4 border-black flex justify-center items-center gap-2">
                       <FileText className="w-5 h-5" />
                       View Immutable Record
@@ -236,11 +235,11 @@ const CheckLand = () => {
               </div>
             </div>
           ) : assets && assets.length === 0 ? (
-             <div className="py-20 text-center border-4 border-black bg-white shadow-[8px_8px_0px_0px_black]">
-               <p className="text-xl font-bold text-[#D02020] uppercase tracking-widest">
-                 No Records Found for this ID.
-               </p>
-             </div>
+            <div className="py-20 text-center border-4 border-black bg-white shadow-[8px_8px_0px_0px_black]">
+              <p className="text-xl font-bold text-[#D02020] uppercase tracking-widest">
+                No Records Found for this ID.
+              </p>
+            </div>
           ) : (
             !isSearching && (
               <div className="py-20 text-center border-4 border-dashed border-black bg-white/50">
