@@ -11,9 +11,10 @@ import Navbar from "../components/Navbar";
 import axios from "axios";
 import { useVerifyData } from "../contaxts/verifyDataContext";
 import Footer from "../components/Footer";
+import { Link } from "react-router-dom";
 
 const AadhaarValidation = () => {
-  const [step, setStep] = useState("aadhaar");
+  const [step, setStep] = useState("aadhaar"); // 'aadhaar' | 'otp' | 'success' | 'error'
   const [aadhaar, setAadhaar] = useState("");
   const [otp, setOtp] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -225,12 +226,13 @@ const AadhaarValidation = () => {
                     Your credentials have been matched successfully with the
                     UIDAI registry.
                   </p>
-                  <button
-                    onClick={() => window.location.reload()}
-                    className="w-full py-4 bg-black text-white border-4 border-black font-black uppercase tracking-[0.2em] shadow-[6px_6px_0px_0px_#1040C0] hover:-translate-y-1 active:translate-y-0 transition-all"
-                  >
-                    Proceed
-                  </button>
+                  <Link to="/verify-land">
+                    <button
+                        className="w-full py-4 bg-black text-white border-4 border-black font-black uppercase tracking-[0.2em] shadow-[6px_6px_0px_0px_#1040C0] hover:-translate-y-1 active:translate-y-0 transition-all"
+                    >
+                        Proceed
+                    </button>
+                  </Link>
                 </div>
               )}
 

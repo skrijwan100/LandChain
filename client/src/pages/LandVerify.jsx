@@ -2,25 +2,29 @@ import React, { useState } from "react";
 import Navbar from "../components/Navbar.jsx";
 import Footer from "../components/Footer.jsx";
 import Button from "../components/UI/Button.jsx";
+import { useVerifyData } from "../contaxts/verifyDataContext.jsx";
+import data from "../Mocdata/LandOwner.json";
+import { useNavigate } from "react-router-dom";
 
 export default function LandVerify() {
+  const { verifyData: initialVerifyData, setVerifyData: setInitialVerifyData } = useVerifyData();
   // 1. Mock Context Data
   const mockContextUser = {
-    fullName: "Avinash Kr Mandal",
-    address: "Tech Block, Sector 5, Web3 City, India",
+    fullName: initialVerifyData.name,
+    address: initialVerifyData.address,
     walletAddress: "0x71C...9A23",
   };
 
   // 2. States
   const [verifyData, setVerifyData] = useState({
-    plotNo: "",
+    PlotNumber: "",
     area: "",
-    propertyAddress: "",
+    Location: "",
   });
   const [verifyStatus, setVerifyStatus] = useState("idle"); // "idle" | "verifying" | "verified"
 
   // Always show masked format with last 4 digits (Mocked for UI)
-  const maskedAadhaar = "XXXX-XXXX-9012";
+  const maskedAadhaar = initialVerifyData.aadhaar;
 
   // Handlers
   const handleChange = (e) => {
@@ -31,45 +35,40 @@ export default function LandVerify() {
   const handleVerify = (e) => {
     e.preventDefault();
     setVerifyStatus("verifying");
-
-    console.clear();
-    console.log("==== 🔍 INITIATING BLOCKCHAIN VERIFICATION ====");
-    console.log("⏳ Status: Verifying...");
-
-    console.log("📦 Target Land Details (Input):", {
-      plotNo: verifyData.plotNo,
-      area: verifyData.area,
-      address: verifyData.propertyAddress
+    console.log(initialVerifyData.aadhaar, verifyData);
+    const user = data.find((item) => {
+      console.log(item.AadhaarHash, initialVerifyData.aadhaar);
+      return item.AadhaarHash === initialVerifyData.aadhaar;
     });
 
-    console.log("👤 Context Identity Matching:", {
-      ownerName: mockContextUser.fullName,
-      wallet: mockContextUser.walletAddress
-    });
+    if (!user) {
+      console.log("❌ Aadhaar not found");
+      setVerifyStatus("idle");
+      return;
+    }
 
-    setTimeout(() => {
-      console.log("🔗 Connecting to LandChain RPC Node...");
-    }, 500);
+    const isMatch =
+      user.PlotNumber === Number(verifyData.PlotNumber) &&
+      user.area.trim().toLowerCase() === verifyData.area.trim().toLowerCase() &&
+      user.Location.trim().toLowerCase() === verifyData.Location.trim().toLowerCase();
 
-    setTimeout(() => {
-      console.log(`🔎 Searching Ledger for Plot No: [${verifyData.plotNo}]...`);
-    }, 1200);
-
-    setTimeout(() => {
-      console.log("⚖️ Comparing Owner Signatures and Area Records...");
-    }, 1800);
-
-    setTimeout(() => {
-      console.log("✅ MATCH FOUND: Verification Successful!");
-      console.log("📝 Verified Record TxHash: 0x9f8...2b1a");
-      console.log("===============================================");
+    if (isMatch) {
+      console.log("✅ Land Verified:", user);
       setVerifyStatus("verified");
-    }, 2800);
+    } else {
+      console.log("❌ Land details do not match");
+      setVerifyStatus("idle");
+    }
+
+    setInitialVerifyData((prev) => ({ ...prev, ...verifyData }));
+
+    console.log({ user, verifyData })
+
   };
 
+  const navigate = useNavigate()
   const handleSubmitToBlockchain = () => {
-    console.log("🚀 Initiating Final Submission to Blockchain...");
-    alert("Record Submitted to Blockchain Successfully!");
+    navigate('/submit-blockchain')
   };
 
   return (
@@ -145,9 +144,9 @@ export default function LandVerify() {
                     </label>
                     <input
                       type="text"
-                      name="plotNo"
+                      name="PlotNumber"
                       placeholder="e.g. S-124/B"
-                      value={verifyData.plotNo}
+                      value={verifyData.PlotNumber}
                       onChange={handleChange}
                       required
                       disabled={verifyStatus === "verifying"}
@@ -178,9 +177,9 @@ export default function LandVerify() {
                     Property Location to Verify
                   </label>
                   <textarea
-                    name="propertyAddress"
+                    name="Location"
                     placeholder="Enter complete address..."
-                    value={verifyData.propertyAddress}
+                    value={verifyData.Location}
                     onChange={handleChange}
                     required
                     rows="2"
@@ -235,7 +234,7 @@ export default function LandVerify() {
                   </div>
                   <div className="flex justify-between border-b-2 border-gray-200 pb-2 mb-2">
                     <span className="font-bold text-gray-500 uppercase text-sm">Plot No.</span>
-                    <span className="font-black text-[#121212] uppercase">{verifyData.plotNo}</span>
+                    <span className="font-black text-[#121212] uppercase">{verifyData.PlotNumber}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="font-bold text-gray-500 uppercase text-sm">Owner Match</span>

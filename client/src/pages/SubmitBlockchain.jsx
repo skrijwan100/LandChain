@@ -6,15 +6,17 @@ import { BrowserProvider, ethers } from 'ethers';
 import { keccak256, toUtf8Bytes } from "ethers";
 import contract from "../contracts/LandRegistry.sol/AllLandRegistry.json"
 import SuccessPage from "./SuccessPage.jsx";
+import { useVerifyData } from "../contaxts/verifyDataContext.jsx";
+
 export default function SubmitBlockchain() {
-  // 1. Text Inputs State
+  const { verifyData } = useVerifyData();
   const { ethereum } = window;
   const [formData, setFormData] = useState({
-    fullName: "",
-    aadhaarNo: "",
-    plotNo: "",
-    area: "",
-    location: "",
+    fullName: verifyData.name || "",
+    aadhaarNo: verifyData.aadhaar || "",
+    plotNo: verifyData.PlotNumber || "",
+    area: verifyData.area || "",
+    location: verifyData.Location || "",
   });
   const [blocksubmit,setBlocksubmit]=useState(false)
   const [BlockData,setBlockData]=useState({})
@@ -194,6 +196,7 @@ if(blocksubmit){
                   placeholder="Enter as per Govt ID"
                   value={formData.fullName}
                   onChange={handleChange}
+                  readOnly
                   required
                   className="p-4 border-4 border-[#121212] bg-[#F0F0F0] font-medium focus:outline-none focus:bg-white focus:shadow-[6px_6px_0px_0px_#D02020] transition-all"
                 />
@@ -212,6 +215,7 @@ if(blocksubmit){
                   placeholder="12-Digit Identity Number"
                   value={formData.aadhaarNo}
                   onChange={handleChange}
+                  readOnly
                   maxLength={12}
                   required
                   className="p-4 border-4 border-[#121212] bg-[#F0F0F0] font-medium focus:outline-none focus:bg-white focus:shadow-[6px_6px_0px_0px_#D02020] transition-all tracking-widest"
@@ -228,6 +232,7 @@ if(blocksubmit){
                   placeholder="e.g. S-124/B"
                   value={formData.plotNo}
                   onChange={handleChange}
+                  readOnly
                   required
                   className="p-4 border-4 border-[#121212] bg-[#F0F0F0] font-medium focus:outline-none focus:bg-white focus:shadow-[6px_6px_0px_0px_#1040C0] transition-all"
                 />
@@ -239,12 +244,13 @@ if(blocksubmit){
                 </label>
                 <div className="flex">
                   <input
-                    type="number"
+                    type="text"
                     name="area"
                     placeholder="2400"
                     value={formData.area}
                     onChange={handleChange}
                     required
+                    readOnly
                     className="w-full p-4 border-4 border-r-0 border-[#121212] bg-[#F0F0F0] font-medium focus:outline-none focus:bg-white focus:shadow-[6px_6px_0px_0px_#1040C0] transition-all"
                   />
                   <div className="bg-[#121212] text-white flex items-center justify-center px-4 border-4 border-[#121212] font-bold uppercase">
@@ -264,6 +270,7 @@ if(blocksubmit){
                 value={formData.location}
                 onChange={handleChange}
                 required
+                readOnly
                 rows="3"
                 className="p-4 border-4 border-[#121212] bg-[#F0F0F0] font-medium focus:outline-none focus:bg-white focus:shadow-[6px_6px_0px_0px_#F0C020] transition-all resize-none"
               ></textarea>
