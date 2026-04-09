@@ -6,6 +6,7 @@ import AadhaarVerify from "./pages/AadhaarVerify.jsx";
 import LandVerify from "./pages/LandVerify.jsx";
 import SubmitBlockchain from "./pages/SubmitBlockchain.jsx";
 import CheckLand from "./pages/CheckLand.jsx";
+import AadhaarValidation from "./pages/AadhaarValidation.jsx";
 
 const App = () => {
   return (
@@ -15,8 +16,8 @@ const App = () => {
         <Route path="/" element={<LandingPage />} />
 
         {/* Action Pages */}
-        {/* <Route path="/verify-aadhaar" element={<AadhaarVerify />} />
-        <Route path="/verify-land" element={<LandVerify />} />
+         <Route path="/verify-aadhaar" element={<AadhaarValidation />} />
+        {/*<Route path="/verify-land" element={<LandVerify />} />
         <Route path="/submit-blockchain" element={<SubmitBlockchain />} />
         <Route path="/check-land" element={<CheckLand />} /> */}
       </Routes>
