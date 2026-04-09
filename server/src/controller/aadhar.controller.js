@@ -51,7 +51,7 @@ const verifyAadharOTP = asyncHandler(async (req, res) => {
         },
         body: JSON.stringify({
             '@entity': 'in.co.sandbox.kyc.aadhaar.okyc.request',
-            reference_id: reference_id,
+            reference_id: String(reference_id),
             otp: otp
         })
     };

@@ -3,11 +3,14 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import "./index.css";
 import App from "./App.jsx";
+import VerifyDataContextProvider from "./contaxts/verifyDataContext.jsx";
 
 createRoot(document.getElementById("root")).render(
   <BrowserRouter>
-    <StrictMode>
-      <App />
-    </StrictMode>
-  </BrowserRouter>,
+    <VerifyDataContextProvider>
+      <StrictMode>
+        <App />
+      </StrictMode>
+    </VerifyDataContextProvider>
+  </BrowserRouter>
 );

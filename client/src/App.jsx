@@ -5,6 +5,8 @@ import LandingPage from "./pages/LandingPage.jsx";
 import LandVerify from "./pages/LandVerify.jsx";
 import SubmitBlockchain from "./pages/SubmitBlockchain.jsx";
 import AadhaarVerify from "./pages/AadhaarVerify.jsx";
+import AadhaarValidation from "./pages/AadhaarValidation.jsx";
+import CheckLand from "./pages/CheckLand.jsx";
 import Loader from "./components/Loader.jsx";
 
 // Context for Global Navigation
@@ -14,8 +16,7 @@ export const useNav = () => useContext(NavContext);
 const App = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-
-  // Custom Navigation function with Bauhaus transition
+  
   const navigateWithLoader = (path) => {
     if (window.location.pathname === path) return; // Don't reload if already on page
 
@@ -37,9 +38,8 @@ const App = () => {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/verify-land" element={<LandVerify />} />
-        <Route path="/verify-aadhaar" element={<AadhaarVerify />} />
+        <Route path="/verify-aadhaar" element={<AadhaarValidation />} />
         <Route path="/submit-blockchain" element={<SubmitBlockchain />} />
-
       </Routes>
     </NavContext.Provider>
   );

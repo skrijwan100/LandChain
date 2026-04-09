@@ -1,5 +1,5 @@
 import React from "react";
-import { useNav } from "../App.jsx"; 
+import { useNav } from "../App.jsx";
 import Button from "./UI/Button.jsx";
 import landchainLogo from "../assets/landchain.png";
 
@@ -44,6 +44,13 @@ export default function Navbar() {
           className="font-bold uppercase tracking-widest text-[#121212] hover:text-[#D02020] transition-colors cursor-pointer border-none bg-transparent"
         >
           Mint Land
+        </button>
+
+        <button
+          onClick={() => navigateWithLoader("/verify-aadhaar")}
+          className="font-bold uppercase tracking-widest text-[#121212] hover:text-[#D02020] transition-colors cursor-pointer border-none bg-transparent"
+        >
+          Verify Aadhaar
         </button>
 
         <Button variant="primary">Connect Wallet</Button>
