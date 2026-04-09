@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router";
 
 const CONTRACT = "0x4aB3c1F2e8D90721cC4f3Ea2";
 const TX_HASH   = "0xf7c2...3Bd9A1e4F802cD56";
@@ -6,7 +7,7 @@ const TX_HASH   = "0xf7c2...3Bd9A1e4F802cD56";
 const stripeData = ["","r","y","","","r","y","","","r","y","","r","y"];
 const pills = ["Tamper-proof","Transparent","UIDAI Verified","Polygon PoS"];
 
-export default function SuccessPage() {
+export default function SuccessPage({hash,aadher}) {
   const [aadhaar, setAadhaar] = useState("");
   const [copiedC, setCopiedC] = useState(false);
   const [copiedT, setCopiedT] = useState(false);
@@ -313,7 +314,7 @@ export default function SuccessPage() {
             <div className="lc-ib-top">
               <div className="lc-ib-label">
                 <span className="lc-ib-dot" />
-                Contract Address
+                Aadher No
               </div>
               <div className="lc-ib-actions">
                 <div className={`lc-ib-btn${copiedC ? " copied" : ""}`} onClick={() => copy(CONTRACT, "c")} title="Copy">
@@ -322,7 +323,7 @@ export default function SuccessPage() {
                 <div className="lc-ib-btn" title="View on Explorer"><ExternalIcon /></div>
               </div>
             </div>
-            <div className="lc-ib-value">{CONTRACT}</div>
+            <div className="lc-ib-value">{aadher}</div>
           </div>
 
           {/* TRANSACTION HASH */}
@@ -339,7 +340,7 @@ export default function SuccessPage() {
                 <div className="lc-ib-btn" title="View on Explorer"><ExternalIcon /></div>
               </div>
             </div>
-            <div className="lc-ib-value">{TX_HASH}</div>
+            <div className="lc-ib-value">{hash}</div>
           </div>
 
           {/* DIVIDER */}
@@ -348,46 +349,16 @@ export default function SuccessPage() {
             <span className="lc-divider-text">Check Asset</span>
             <div className="lc-divider-line" />
           </div>
-
           {/* AADHAAR INPUT */}
-          <label className="lc-input-label">Aadhaar Number</label>
-          <div className="lc-input-wrap">
-            <div className="lc-input-icon">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
-                <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                  stroke="#aaa" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </div>
-            <input
-              type="text"
-              placeholder="XXXX XXXX XXXX"
-              value={aadhaar}
-              maxLength={14}
-              onChange={(e) => { setAadhaar(fmt(e.target.value)); setDone(false); }}
-            />
-            {aadhaar && (
-              <span className="lc-char-count">{aadhaar.replace(/\s/g,"").length}/12</span>
-            )}
-          </div>
 
           {/* CTA BUTTON */}
-          <button className="lc-cta-btn" onClick={handleCheck} disabled={checking}>
+          <Link to="/"><button className="lc-cta-btn" onClick={handleCheck} disabled={checking}>
             <span style={{ position:"relative", zIndex:1, display:"flex", alignItems:"center", gap:9 }}>
-              {checking ? (
-                <>
-                  <div className="lc-dot-loader"><span/><span/><span/></div>
-                  Verifying on Chain...
-                </>
-              ) : (
-                <>
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
-                    <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke="#fff" strokeWidth="2.3" strokeLinecap="round"/>
-                  </svg>
-                  Check Digital Asset
-                </>
-              )}
+             
+                  Home Page
+              
             </span>
-          </button>
+          </button></Link>
 
           {/* RESULT */}
           {done && (

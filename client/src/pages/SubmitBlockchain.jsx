@@ -2,9 +2,13 @@ import React, { useState } from "react";
 import Navbar from "../components/Navbar.jsx";
 import Footer from "../components/Footer.jsx";
 import Button from "../components/UI/Button.jsx";
-
+import { BrowserProvider, ethers } from 'ethers';
+import { keccak256, toUtf8Bytes } from "ethers";
+import contract from "../contracts/LandRegistry.sol/AllLandRegistry.json"
+import SuccessPage from "./SuccessPage.jsx";
 export default function SubmitBlockchain() {
   // 1. Text Inputs State
+  const { ethereum } = window;
   const [formData, setFormData] = useState({
     fullName: "",
     aadhaarNo: "",
@@ -12,7 +16,8 @@ export default function SubmitBlockchain() {
     area: "",
     location: "",
   });
-
+  const [blocksubmit,setBlocksubmit]=useState(false)
+  const [BlockData,setBlockData]=useState({})
   // 2. Single Unified State for File/Image Data
   const [fileData, setFileData] = useState({
     file: null, // Actual File object
@@ -21,7 +26,9 @@ export default function SubmitBlockchain() {
     size: "", // File size in KB
     type: "", // MIME type
   });
-
+  const [ipfsimge, setipfsimg] = useState('')
+  const [imagefile, setImagefile] = useState()
+  const [loder, setLoder] = useState(false)
   // 3. Track IPFS Step: "idle" | "pending" | "uploaded"
   const [ipfsStatus, setIpfsStatus] = useState("idle");
 
@@ -51,6 +58,7 @@ export default function SubmitBlockchain() {
       };
 
       setFileData(newFileData);
+      setImagefile(selectedFile)
       setIpfsStatus("pending"); // Ready to upload to IPFS
 
       console.log("==== FILE SELECTED & STATE UPDATED ====");
@@ -59,31 +67,62 @@ export default function SubmitBlockchain() {
   };
 
   // Action 1: Upload to IPFS (Instant State Change & Log)
-  const handleIPFSUpload = (e) => {
+  const handleIPFSUpload = async (e) => {
     e.preventDefault();
+    setIpfsStatus('pending');
+    setLoder(true)
     if (!fileData.file) return;
+    const imgdata = new FormData();
+    imgdata.append("file", imagefile);
+    const requesturl = `https://api.pinata.cloud/pinning/pinFileToIPFS`
+    const uploadrequest = await fetch(requesturl, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${import.meta.env.VITE_PINATA_JWT}`,
+      },
+      body: imgdata
+    })
 
-    console.log("==== UPLOAD TO IPFS LOG ====");
-    console.log("File Data sent to IPFS:", fileData);
+    const upload = await uploadrequest.json()
+    console.log(upload)
+    setipfsimg(upload.IpfsHash)
 
+    console.log(imagefile);
+    setLoder(false)
     // Instantly update status to allow minting
     setIpfsStatus("uploaded");
   };
 
   // Action 2: Mint to Blockchain
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Guard: Ensure file is uploaded to IPFS if selected
+    setLoder(true)
     if (fileData.file && ipfsStatus !== "uploaded") {
       alert("Please upload the document to IPFS first!");
       return;
     }
-
-    console.log("==== MINT TO BLOCKCHAIN LOG ====");
-    console.log("Smart Contract Text Data:", formData);
-    console.log("IPFS Reference Data:", fileData);
-    alert("Transaction logs printed in console!");
+    const hashedId = keccak256(toUtf8Bytes(formData.aadhaarNo));
+    const WalletProvider = new BrowserProvider(ethereum);
+    const singer = await WalletProvider.getSigner();
+    const submitLandDatatnx = new ethers.Contract(
+      import.meta.env.VITE_CONTRACT_DEPOLY_ADDRESS,
+      contract.abi,
+      singer
+    )
+    const Landdata = await submitLandDatatnx.AddNewLand(
+      formData.fullName,
+      hashedId,
+      formData.plotNo,
+      formData.area,
+      formData.location,
+      ipfsimge
+    )
+    await Landdata.wait();
+    setBlockData(Landdata)
+    console.log(Landdata);
+    setLoder(false)
+    setBlocksubmit(true)
+    // Guard: Ensure file is uploaded to IPFS if selected
   };
 
   // Action: Clear Form
@@ -105,7 +144,16 @@ export default function SubmitBlockchain() {
     setIpfsStatus("idle");
     console.log("==== FORM CLEARED ====");
   };
+if(blocksubmit){
+  return(
+    <>
+     <div className="min-h-screen bg-[#F0F0F0] text-[#121212] font-['Outfit'] flex flex-col">
 
+    <SuccessPage hash={BlockData.hash} aadher={formData.aadhaarNo} />
+    </div>
+    </>
+  )
+}
   return (
     <div className="min-h-screen bg-[#F0F0F0] text-[#121212] font-['Outfit'] flex flex-col">
       <Navbar />
@@ -224,7 +272,7 @@ export default function SubmitBlockchain() {
             {/* Image / Document Upload */}
             <div className="flex flex-col mb-10">
               <label className="text-xl font-black uppercase tracking-tight mb-2 flex justify-between">
-                <span>Property Image / NOC Document</span>
+                <span>Property Image / Deed Document</span>
                 {ipfsStatus === "uploaded" && (
                   <span className="text-[#1040C0] text-sm pt-1">
                     IPFS Verified
@@ -297,8 +345,18 @@ export default function SubmitBlockchain() {
                 }
               >
                 {ipfsStatus === "pending"
-                  ? "Upload to IPFS"
-                  : "Mint to Blockchain"}
+                  ? loder ? <> <div
+                    className="w-6 h-6 mr-3 border-4 rounded-full border-white border-t-black border-r-black animate-spin"
+                    role="status"
+                    aria-label="loading"
+                  ></div>
+                    UPLOADING...</> : "Upload to IPFS"
+                  :loder ? <> <div
+                    className="w-6 h-6 mr-3 border-4 rounded-full border-white border-t-black border-r-black animate-spin"
+                    role="status"
+                    aria-label="loading"
+                  ></div>
+                    SUBMITTING...</> :  "Mint to Blockchain"}
               </Button>
 
               <button
