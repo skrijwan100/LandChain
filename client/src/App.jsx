@@ -15,10 +15,10 @@ const App = () => {
         <Route path="/" element={<LandingPage />} />
 
         {/* Action Pages */}
-        {/* <Route path="/verify-aadhaar" element={<AadhaarVerify />} />
-        <Route path="/verify-land" element={<LandVerify />} />
+        {/* <Route path="/verify-aadhaar" element={<AadhaarVerify />} /> */}
+        {/* <Route path="/verify-land" element={<LandVerify />} /> */}
         <Route path="/submit-blockchain" element={<SubmitBlockchain />} />
-        <Route path="/check-land" element={<CheckLand />} /> */}
+        {/* <Route path="/check-land" element={<CheckLand />} /> */}
       </Routes>
     </>
   );
