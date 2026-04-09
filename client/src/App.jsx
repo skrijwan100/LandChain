@@ -7,6 +7,7 @@ import SubmitBlockchain from "./pages/SubmitBlockchain.jsx";
 import AadhaarValidation from "./pages/AadhaarValidation.jsx";
 import Loader from "./components/Loader.jsx";
 import SuccessPage from "./pages/SuccessPage.jsx";
+import CheckLand from "./pages/CheckLand.jsx";
 
 // Context for Global Navigation
 const NavContext = createContext();
@@ -39,6 +40,7 @@ const App = () => {
         <Route path="/verify-land" element={<LandVerify />} />
         <Route path="/verify-aadhaar" element={<AadhaarValidation />} />
         <Route path="/submit-blockchain" element={<SubmitBlockchain />} />
+        <Route path="/check-assets" element={<CheckLand />} />
         <Route path="/success" element={<SuccessPage />} />
       </Routes>
     </NavContext.Provider>

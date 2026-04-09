@@ -39,6 +39,13 @@ export default function Navbar() {
           Verify Land
         </button>
 
+         <button
+          onClick={() => navigateWithLoader("/check-assets")}
+          className="font-bold uppercase tracking-widest text-[#121212] hover:text-[#1040C0] transition-colors cursor-pointer border-none bg-transparent"
+        >
+          Check Assets
+        </button>
+
         <button
           onClick={() => navigateWithLoader("/submit-blockchain")}
           className="font-bold uppercase tracking-widest text-[#121212] hover:text-[#D02020] transition-colors cursor-pointer border-none bg-transparent"
