@@ -1,0 +1,12 @@
+import { Router } from "express";
+import {
+    sendOTPByAadhar,
+    verifyAadharOTP
+} from "../controller/aadhar.controller.js";
+
+const router = Router();
+
+router.route("/send-otp").post(sendOTPByAadhar)
+router.route("/verify-otp").post(verifyAadharOTP)
+
+export default router;
