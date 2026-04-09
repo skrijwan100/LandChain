@@ -148,7 +148,7 @@ const AadhaarValidation = () => {
                                         disabled={aadhaar.length !== 12 || isLoading}
                                         className={`w-full py-4 border-4 border-black font-black uppercase tracking-widest flex items-center justify-center gap-3 transition-all
                       ${aadhaar.length === 12
-                                                ? 'bg-[#F0C020] shadow-[6px_6px_0px_0px_black] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none'
+                                                ? 'bg-[#F0C020] shadow-[6px_6px_0px_0px_black] active:translate-x-0.5 active:translate-y-[2px] active:shadow-none'
                                                 : 'bg-gray-200 cursor-not-allowed opacity-50'}`}
                                     >
                                         {isLoading ? "Processing..." : "Verify Identity"}
