@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import axios from 'axios';
+import { useVerifyData } from '../contaxts/verifyDataContext';
 
 const AadhaarValidation = () => {
     const [step, setStep] = useState('aadhaar'); // 'aadhaar', 'otp', 'success', 'error'
@@ -19,6 +20,8 @@ const AadhaarValidation = () => {
     const [otp, setOtp] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [referenceId, setReferenceId] = useState('');
+
+    const { verifyData, setVerifyData } = useVerifyData();
 
     // Mock handlers for the demo
     const handleAadhaarSubmit = async (e) => {
@@ -67,6 +70,11 @@ const AadhaarValidation = () => {
             const status = res.data?.data?.data?.status;
 
             if (status === "VALID") {
+                setVerifyData({
+                    aadhaar: aadhaar,
+                    name: res.data?.data?.data?.name,
+                    address: res.data?.data?.data?.full_address
+                })
                 setStep('success');
             } else {
                 setStep('error');
