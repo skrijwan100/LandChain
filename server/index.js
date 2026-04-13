@@ -2,9 +2,7 @@ import "dotenv/config";
 
 import connectDB from "./src/db/db.js"
 import { app } from "./src/app.js";
-
 const PORT = process.env.PORT || 4000;
-
 connectDB().then(() => {
   app.on("error", (err) => {
     console.log(err)
